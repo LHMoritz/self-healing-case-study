@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: node-io-stress
+  namespace: teastore
+  labels:
+    app: io-stress
+spec:
+  selector:
+    matchLabels:
+      app: io-stress
+  template:
+    metadata:
+      labels:
+        app: io-stress
+    spec:
+      nodeSelector:
+        teastore-experiment-io-stress: "true"
+      containers:
+      - name: stress
+        image: polinux/stress
+        workingDir: /stress-data
+        # We mount a hostPath volume to ensure the stressor writes directly to the 
+        # underlying Node filesystem (and not just an ephemeral container layer), 
+        # to maximize the actual disk IOPS saturation.
+        # We wrap the stress command in a while loop. Azure often throttles or aborts 
+        # continuous extreme IO bursts on standard OS disks, causing stress to exit with Error 1.
+        # This shell wrapper prevents the pod from entering CrashLoopBackOff.
+        command: ["/bin/sh", "-c"]
+        args: ["while true; do stress --hdd 2 --hdd-bytes 1G --io 4 --timeout 60s || true; sleep 1; done"]
+        volumeMounts:
+        - name: host-fs
+          mountPath: /stress-data
+      volumes:
+      - name: host-fs
+        hostPath:
+          path: /tmp/stress-data # The actual path on the AKS host OS
+          type: DirectoryOrCreate

@@ -1,0 +1,23 @@
+# Strategic merge patch for teastore-persistence
+# Adds resource limits to the app container and injects a CPU stress sidecar.
+# Applied via: kubectl patch deployment teastore-persistence --patch-file manifests/stress-patch-persistence.yaml --type=strategic -n <namespace>
+spec:
+  template:
+    spec:
+      containers:
+        - name: teastore-persistence
+          resources:
+            limits:
+              cpu: "500m"
+              memory: "1500Mi"
+        - name: stress
+          image: polinux/stress
+          command: ["stress"]
+          args: ["--cpu", "2", "--timeout", "99999999"]
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "32Mi"
+            limits:
+              cpu: "400m"
+              memory: "64Mi"

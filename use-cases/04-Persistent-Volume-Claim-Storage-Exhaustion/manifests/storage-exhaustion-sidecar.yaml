@@ -1,0 +1,28 @@
+# Strategic merge patch for Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: teastore-db
+spec:
+  template:
+    spec:
+      containers:
+      - name: volume-filler
+        image: busybox
+        # Fills the disk with a 950MB file (assuming 1Gi PVC)
+        command: ["/bin/sh", "-c"]
+        args:
+          - |
+            echo "Starting to fill volume..."
+            dd if=/dev/zero of=/var/lib/mysql/bloat.dat bs=1M count=950
+            echo "Volume filled. Sleeping to maintain state."
+            sleep infinity
+        volumeMounts:
+        - name: teastore-db-volume-1
+          mountPath: /var/lib/mysql
+      volumes:
+      - name: teastore-db-volume-1
+        # Overwrite the emptyDir with our new PVC
+        persistentVolumeClaim:
+          claimName: teastore-db-pvc
+        emptyDir: null

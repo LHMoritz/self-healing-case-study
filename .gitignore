@@ -1,0 +1,9 @@
+# Observability Data
+*.dat
+*.log
+
+# Temporary/System files
+.DS_Store
+
+# SSH keys
+*.pem

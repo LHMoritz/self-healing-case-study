@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: alert-flood
+  namespace: teastore
+  labels:
+    app: alert-flood
+spec:
+  replicas: 200
+  selector:
+    matchLabels:
+      app: alert-flood
+  template:
+    metadata:
+      labels:
+        app: alert-flood
+    spec:
+      containers:
+      - name: crasher
+        image: busybox
+        # Intentionally crash immediately to trigger CrashLoopBackOff at scale
+        command: ["/bin/sh", "-c", "echo 'Simulating fatal error'; exit 1"]
+        resources:
+          requests:
+            cpu: "1m"
+            memory: "10Mi"

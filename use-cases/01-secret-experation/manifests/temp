@@ -1,0 +1,7 @@
+com.instana.plugin.azure:
+  enabled: true
+  subscription: "<YOUR_AZURE_SUBSCRIPTION_ID>"
+  tenant: "<YOUR_AZURE_TENANT_ID>"
+  principals:
+    - id: "<YOUR_SERVICE_PRINCIPAL_ID>"
+      secret: "<account-specific-secret>"
