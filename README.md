@@ -4,7 +4,7 @@ A research case study evaluating the self-healing potential of incident manageme
 
 ## Overview
 
-Five failure scenarios are implemented and evaluated. Each use case deliberately triggers a specific infrastructure or application failure and observes whether the monitoring tool can detect and automatically remediate it.
+Three failure scenarios are implemented and evaluated completely. Two more are prepared but have not been evaluated. Each use case deliberately triggers a specific infrastructure or application failure and observes whether the monitoring tool can detect and automatically remediate it.
 
 ## Repository Structure
 
@@ -42,7 +42,7 @@ Each use case folder contains:
 
 ## Prerequisites
 
-- AKS cluster with Secrets Store CSI Driver and Workload Identity enabled
+- AKS cluster with Secrets Store CSI Driver and Workload Identity enabled — use [Cloud-agnostic-managed-k8s-cluster](https://github.com/LHMoritz/Cloud-agnostic-managed-k8s-cluster) to provision one
 - Azure CLI (`az`) authenticated
 - `kubectl` configured against the cluster
 - Instana agent deployed (see `instana-installation/`)
